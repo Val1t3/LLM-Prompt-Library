@@ -6,7 +6,7 @@ import type { FirebaseApp } from "firebase/app";
 
 function App() {
   const [app, setApp] = useState<FirebaseApp | undefined>(undefined);
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(false)
 
   console.log("env", import.meta.env.VITE_APIKEY)
 
@@ -25,12 +25,16 @@ function App() {
     if (app)
       setApp(app)
     console.log(app)
+
+    if (localStorage.getItem("user")) {
+      setUser(true)
+    }
   }, [])
 
   return (
-    <div className='h-screen bg-black'>
-      {user ? (
-        <LoginRegisterForm setUser={setUser} />
+    <div className='h-screen'>
+      {!user ? (
+        <LoginRegisterForm />
       ) : (
           <p>Hello World!</p>
         )}

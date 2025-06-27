@@ -4,11 +4,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 type AuthMode = 'login' | 'register';
 
-type LoginRegisterFormProps = {
-  setUser: (user: any) => void;
-};
-
-const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ setUser }) => {
+const LoginRegisterForm = () => {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [formData, setFormData] = useState({
     name: '',
@@ -39,17 +35,12 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ setUser }) => {
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
-          // localStorage.setItem("user", JSON.stringify(userCredential.user));
-          setUser(userCredential.user)
-          window.location.href = "/home";
+        localStorage.setItem("user", JSON.stringify(userCredential.user));
+        window.location.reload();
       })
           .catch((error) => {
               console.error(error.message);
       });
-  }
-
-  const handleLogin = () => {
-    
   }
 
   return (
