@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 
 type AuthMode = 'login' | 'register';
 
-const LoginRegisterForm: React.FC = () => {
+type LoginRegisterFormProps = {
+  setUser: (user: any) => void;
+};
+
+const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ setUser }) => {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [formData, setFormData] = useState({
     name: '',
@@ -25,9 +31,26 @@ const LoginRegisterForm: React.FC = () => {
     if (authMode === 'login') {
       console.log('Logging in with:', formData);
     } else {
-      console.log('Registering with:', formData);
+        handleRegister();
     }
   };
+
+  const handleRegister = () => {
+      const auth = getAuth();
+      createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+          // localStorage.setItem("user", JSON.stringify(userCredential.user));
+          setUser(userCredential.user)
+          window.location.href = "/home";
+      })
+          .catch((error) => {
+              console.error(error.message);
+      });
+  }
+
+  const handleLogin = () => {
+    
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
